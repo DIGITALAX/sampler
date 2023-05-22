@@ -81,6 +81,7 @@ FROM (
   SELECT publication_id, amount
   FROM lens-public-data.polygon.public_publication_collect_module_details
   WHERE amount != ''
+    AND amount <> '0'
   ORDER BY amount DESC
 ) ppd
 JOIN (
@@ -95,12 +96,13 @@ LIMIT 100
 `;
 
 export const AMOUNT_TO_NO_COLLECTORS_72 = `
-SELECT ppd.publication_id, ppd.amount, ppd.block_timestamp, pps.total_amount_of_collects
+SELECT ppd.publication_id, ppd.amount, pps.total_amount_of_collects
 FROM (
-  SELECT publication_id, amount, block_timestamp
+  SELECT publication_id, amount
   FROM lens-public-data.polygon.public_publication_collect_module_details
-  WHERE block_timestamp >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 72 HOUR)
-    AND amount != ''
+  WHERE amount != ''
+    AND block_timestamp >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 72 HOUR) 
+    AND amount <> '0'
   ORDER BY amount DESC
 ) ppd
 JOIN (
